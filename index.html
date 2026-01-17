@@ -40,6 +40,10 @@
     small {
       color: gray;
     }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -48,18 +52,17 @@
   <h1>Employment Application</h1>
   <p>Please complete all fields to apply.</p>
 
-  <form action="/apply" method="POST" enctype="multipart/form-data">
-
-    <input type="hidden" name="csrf_token" value="">
+  <!-- NO action, NO method -->
+  <form id="jobForm">
 
     <label for="name">Full Name</label>
-    <input id="name" type="text" name="full_name" required>
+    <input id="name" type="text" required>
 
     <label for="email">Email Address</label>
-    <input id="email" type="email" name="email" required>
+    <input id="email" type="email" required>
 
     <label for="position">Position Applied For</label>
-    <select id="position" name="position" required>
+    <select id="position" required>
       <option value="">-- Select --</option>
       <option>Cloud Engineer</option>
       <option>DevOps Engineer</option>
@@ -67,14 +70,56 @@
     </select>
 
     <label for="cv">Upload CV (PDF only)</label>
-    <input id="cv" type="file" name="cv_file" accept=".pdf" required>
+    <input id="cv" type="file" accept=".pdf" required>
     <small>Maximum file size: 2MB</small>
 
-    <button type="submit">Submit Application</button>
+    <button type="button" onclick="uploadCV()">Submit Application</button>
   </form>
 
   <div id="status"></div>
 </div>
+
+<script>
+async function uploadCV() {
+  const status = document.getElementById("status");
+  const fileInput = document.getElementById("cv");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    status.innerText = "Please select a CV file.";
+    return;
+  }
+
+  if (file.type !== "application/pdf") {
+    status.innerText = "Only PDF files are allowed.";
+    return;
+  }
+
+  status.innerText = "Uploading CV...";
+
+  try {
+    // 1️⃣ Get presigned URL
+    const response = await fetch(
+      "https://z1zypxhlme.execute-api.us-east-1.amazonaws.com/get-upload-url"
+    );
+    const data = await response.json();
+
+    // 2️⃣ Upload directly to S3
+    await fetch(data.uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/pdf"
+      },
+      body: file
+    });
+
+    status.innerText = "Application submitted successfully!";
+  } catch (error) {
+    console.error(error);
+    status.innerText = "Upload failed. Please try again.";
+  }
+}
+</script>
+
 </body>
 </html>
-
