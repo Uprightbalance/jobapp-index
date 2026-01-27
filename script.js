@@ -1,5 +1,5 @@
 async function submitForm(event) {
-  event.preventDefault(); // stop page reload
+  event.preventDefault();
 
   const statusDiv = document.getElementById("status");
   statusDiv.innerText = "Submitting application...";
@@ -15,9 +15,7 @@ async function submitForm(event) {
       "https://m6o5e6i67i.execute-api.us-east-1.amazonaws.com/prod/submit",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       }
     );
@@ -30,11 +28,9 @@ async function submitForm(event) {
 
     statusDiv.style.color = "green";
     statusDiv.innerText = "Application submitted successfully!";
-    console.log("Response:", data);
 
   } catch (error) {
     statusDiv.style.color = "red";
     statusDiv.innerText = "Error submitting application.";
-    console.error("Error:", error);
   }
 }
