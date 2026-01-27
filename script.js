@@ -1,4 +1,3 @@
-<script>
 async function submitForm(event) {
   event.preventDefault(); // stop page reload
 
@@ -39,4 +38,3 @@ async function submitForm(event) {
     console.error("Error:", error);
   }
 }
-</script>
