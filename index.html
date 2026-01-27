@@ -47,6 +47,11 @@
         small {
             color: gray;
         }
+
+        #status {
+            margin-top: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -55,17 +60,15 @@
         <h1>Employment Application</h1>
         <p>Please complete all fields to apply.</p>
 
-        <form action="/apply" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="">
-
+        <form onsubmit="submitForm(event)">
             <label for="name">Full Name</label>
-            <input id="name" type="text" name="full_name" required>
+            <input id="name" type="text" required>
 
             <label for="email">Email Address</label>
-            <input id="email" type="email" name="email" required>
+            <input id="email" type="email" required>
 
             <label for="position">Position Applied For</label>
-            <select id="position" name="position" required>
+            <select id="position" required>
                 <option value="">-- Select --</option>
                 <option>Cloud Engineer</option>
                 <option>DevOps Engineer</option>
@@ -73,13 +76,15 @@
             </select>
 
             <label for="cv">Upload CV (PDF only)</label>
-            <input id="cv" type="file" name="cv_file" accept=".pdf" required>
-            <small>Maximum file size: 2MB</small>
+            <input id="cv" type="file" accept=".pdf" disabled>
+            <small>CV upload will be enabled after backend setup</small>
 
             <button type="submit">Submit Application</button>
         </form>
 
         <div id="status"></div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
